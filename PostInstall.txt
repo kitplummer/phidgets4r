@@ -1,0 +1,3 @@
+
+For more information on phidgets, see http://www.phidgets.com/
+
