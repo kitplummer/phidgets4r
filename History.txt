@@ -1,3 +1,9 @@
+== 0.0.2 2010-05-15
+* 2 major enhancements:
+  * Added support for Phidget_Servo
+  * Refactoring Rake build
+  * Initial fork of phidget.rubyforge.com project
+
 == 0.0.1 2009-03-27
 
 * 1 major enhancement:

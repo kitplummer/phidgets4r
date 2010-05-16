@@ -1,28 +1,67 @@
-%w[rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }
-require File.dirname(__FILE__) + '/lib/phidgets'
+require 'rake'
+require 'rake/testtask'
+require 'rake/rdoctask'
+require 'rake/packagetask'
+require 'rake/gempackagetask'
 
-# Generate all the Rake tasks
-# Run 'rake -T' to see list of generated tasks (from gem root directory)
-$hoe = Hoe.new('phidgets', Phidgets::VERSION) do |p|
-  p.developer('Craig DeHaan', 'craig.s.dehaan@gmail.com')
-  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
-  p.post_install_message = 'PostInstall.txt' # TODO remove if post-install message not required
-  p.rubyforge_name       = p.name # TODO this is default value
-  # p.extra_deps         = [
-  #   ['activesupport','>= 2.0.2'],
-  # ]
-  p.extra_dev_deps = [
-    ['newgem', ">= #{::Newgem::VERSION}"]
-  ]
-  
-  p.clean_globs |= %w[**/.DS_Store tmp *.log]
-  path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
-  p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
-  p.rsync_args = '-av --delete --ignore-errors'
+$:.unshift(File.dirname(__FILE__) + "/lib")
+require 'phidgets'
+
+PKG_NAME      = 'phidgets4r'
+PKG_VERSION   = Phidgets::VERSION
+PKG_FILE_NAME = "#{PKG_NAME}-#{PKG_VERSION}"
+
+desc 'Default: run unit tests.'
+task :default => :test
+
+desc "Clean generated files"
+task :clean do
+  #rm FileList['test/']
+  rm_rf 'pkg'
+  rm_rf 'rdoc'
 end
 
-require 'newgem/tasks' # load /tasks/*.rake
-Dir['tasks/**/*.rake'].each { |t| load t }
+desc 'Test the phidgets4r gem.'
+Rake::TestTask.new(:test) do |t|
+  t.libs << 'lib'
+  t.pattern = 'test/test_phidgets.rb'
+  t.verbose = true
+end
 
-# TODO - want other tests/tasks run by default? Add them to the list
-# task :default => [:spec, :features]
+desc 'Generate documentation for the phidgets4r gem.'
+Rake::RDocTask.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'phidgets4r'
+  rdoc.options << '--line-numbers'
+  rdoc.rdoc_files.include('README.rdoc')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+
+# Create compressed packages
+spec = Gem::Specification.new do |s|
+  s.platform = Gem::Platform::RUBY
+  s.name = PKG_NAME
+  s.summary = "Interact with Phidgets via Ruby."
+  s.description = %q{Just a simple Ruby library to provide Ruby-style abstraction around the Phidgets C library.  Fork of the RubyForge phidget project.}
+  s.version = PKG_VERSION
+
+  s.author = "Kit Plummer"
+  s.email = "kitplummer@gmail.com"
+  s.rubyforge_project = PKG_NAME
+  s.homepage = "http://github.com/kitplummer/phidgets4r"
+
+  s.has_rdoc = true
+  s.requirements << 'none'
+  s.require_path = 'lib'
+  s.files = [ "Rakefile", "README.rdoc", "GNU_GPL.txt" ]
+  s.files = s.files + Dir.glob( "lib/**/*" ).delete_if { |item| item.include?( "\.svn" ) }
+  s.files = s.files + Dir.glob( "resources/**/*" ).delete_if { |item| item.include?( "\.svn" ) }
+  s.files = s.files + Dir.glob( "test/**/*" ).delete_if { |item| item.include?( "\.svn" ) || item.include?("\.png") }
+end
+  
+Rake::GemPackageTask.new(spec) do |p|
+  p.gem_spec = spec
+  p.need_tar = false
+  p.need_zip = true
+end

@@ -1,17 +1,23 @@
-= phidgets
+= phidgets4r
 
-* http://phidgets.rubyforge.org
+This Github project is a fork of the http://phidgets.rubyforge.org project.  Cheers to Craig DeHaan for the good start.
+
+Currently only the following Phidgets are supported (looking for peeps with more hardware to test)
+
+* InterfaceKit
+* Servo
+* RFID (untested I think)
 
 == DESCRIPTION:
 
 Phidgets are a set of "plug and play" building blocks for low cost USB sensing and control from your PC.
-This gem provides a ruby interface to the phidgets library.
+This gem provides a ruby interface to the phidgets library (using the Ruby DL layer).
 
 == FEATURES/PROBLEMS:
 
 * This gem uses DL to call the c functions in the Phidgets shared library, so the library must be installed and working.
-* The gem has been tested to work on both Linux and Windows.
-* Not all the devices have been implemented, and not all of the devices that have been implemented have been fully tested.
+* The gem has been tested to work on MacOS X, Linux and Windows.
+* Only a few devices have been implemented, and not all of the devices that have been fully implemented or fully tested.
 * The callback functionality of the Phidgets library is not working very well. Making multiple calls to the phidgets library from
   within a callback will cause an exception.
 * The gem will attempt to guess the name of the phidgets library based on the platform it is run on (Linux or Windows). If it guesses
@@ -35,15 +41,17 @@ rescue Phidgets::Exception => e
 
 end
 
-
-
 == REQUIREMENTS:
 
 * The Phidgets library (http://www.phidgets.com/)
 
+== BUILD:
+
+* rake gem
+
 == INSTALL:
 
-* sudo gem install phidgets
+* gem install phidgets
 
 == LICENSE:
 
