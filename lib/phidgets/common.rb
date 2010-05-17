@@ -210,10 +210,8 @@ module Phidgets
     end
 
     def call_IXXX(sym_name, func_name, format, arg1, arg2, arg3)
-      puts "in call_IXXX format: #{format}"
       sym_name = sym(func_name, format) if sym_name == nil
       r,rs = sym_name.call(arg1, arg2, arg3)
-      puts "r: #{r} - rs: #{rs[2]}"
       raise Phidgets::Exception.new(r) if r != 0
     end
 

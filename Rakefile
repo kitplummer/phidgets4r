@@ -5,7 +5,7 @@ require 'rake/packagetask'
 require 'rake/gempackagetask'
 
 $:.unshift(File.dirname(__FILE__) + "/lib")
-require 'phidgets'
+require 'phidgets4r'
 
 PKG_NAME      = 'phidgets4r'
 PKG_VERSION   = Phidgets::VERSION

@@ -39,7 +39,6 @@ module Phidgets
     end
     
     def setPosition(index, position)
-      puts "calling call_IXXX"
       call_IXXX(@@set_position, 'CPhidgetServo_setPosition', 'IPII', @handle, index, position)
     end
     
