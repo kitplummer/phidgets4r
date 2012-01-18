@@ -25,6 +25,7 @@ This gem provides a ruby interface to the phidgets library (using the Ruby DL la
 
 == SYNOPSIS:
 
+```ruby
 require 'phidgets'
 
 begin
@@ -40,6 +41,7 @@ rescue Phidgets::Exception => e
   puts "Phidgets Error (#{e.code}). #{e}"
 
 end
+```
 
 == REQUIREMENTS:
 
